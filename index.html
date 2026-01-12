@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>DarkPaste</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="topbar">
+  <span class="logo">DarkPaste</span>
+  <div class="links">
+    <a href="index.html">create</a>
+    <a href="admin.html">admin</a>
+  </div>
+</div>
+
+<div class="container">
+  <h2>Create Paste</h2>
+  <input id="title" placeholder="title">
+  <textarea id="content" placeholder="content"></textarea>
+  <input id="token" placeholder="jwt token">
+  <button onclick="post()">submit</button>
+  <p id="msg"></p>
+</div>
+
+<script>
+async function post(){
+  const r = await fetch("http://localhost:3000/api/post",{
+    method:"POST",
+    headers:{
+      "Content-Type":"application/json",
+      "Authorization":token.value
+    },
+    body:JSON.stringify({title:title.value,content:content.value})
+  });
+  const d = await r.json();
+  msg.innerText = d.error || "posted";
+}
+</script>
+</body>
+</html>

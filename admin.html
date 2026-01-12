@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Admin Panel</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="topbar">
+  <span class="logo">DarkPaste</span>
+  <div class="links">
+    <a href="index.html">create</a>
+  </div>
+</div>
+
+<div class="container">
+  <h2>Admin Dashboard</h2>
+  <input id="token" placeholder="admin jwt token">
+  <button onclick="load()">load posts</button>
+
+  <table>
+    <thead>
+      <tr><th>file</th><th>action</th></tr>
+    </thead>
+    <tbody id="rows"></tbody>
+  </table>
+</div>
+
+<script>
+async function load(){
+  const r = await fetch("http://localhost:3000/api/admin/posts",{
+    headers:{Authorization:token.value}
+  });
+  const d = await r.json();
+  rows.innerHTML="";
+  d.forEach(f=>{
+    const tr=document.createElement("tr");
+    tr.innerHTML=`<td>${f}</td><td><button onclick="del('${f.replace('.json','')}')">delete</button></td>`;
+    rows.appendChild(tr);
+  });
+}
+async function del(id){
+  await fetch("http://localhost:3000/api/admin/post/"+id,{
+    method:"DELETE",
+    headers:{Authorization:token.value}
+  });
+  load();
+}
+</script>
+</body>
+</html>
